@@ -12,43 +12,73 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.codeu.codingchallenge;
+package com.company;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.*;
 
 final class MyJSON implements JSON {
-
+  private Map<String ,String> keyValue;//Key-Value Pair
+  private Map<String ,String> keyObject;//Key-Object Pair
+  private  String originalText;//Get the Original JSON Text
+  private MyJSONParser parser = new MyJSONParser();
+  public MyJSON(Map<String,String> keyValue, Map<String,String> keyObject, String originalText)
+  {
+    this.keyValue = keyValue;
+    this.keyObject = keyObject;
+    this.originalText = originalText;
+  }
+  public MyJSON()
+  {
+    this.keyValue = new HashMap<>();
+    this.keyObject = new HashMap<>();
+  }
   @Override
   public JSON getObject(String name) {
-    // TODO: implement this
+    if (keyObject.containsKey(name))
+    {
+      String result = keyObject.get(name);
+      try
+      {
+        return parser.parse(result);
+      }
+      catch (IOException e)
+      {
+        return  null;
+      }
+    }
     return null;
   }
 
   @Override
   public JSON setObject(String name, JSON value) {
-    // TODO: implement this
+    MyJSON newJSON = (MyJSON)value;
+    keyObject.put(name,newJSON.originalText);//Before parse, all objects are still represented as string
     return this;
   }
 
   @Override
-  public String getString(String name) {
-    // TODO: implement this
-    return null;
+  public String getString(String name)
+  {
+    String result = keyValue.get(name);
+    return result;
   }
 
   @Override
-  public JSON setString(String name, String value) {
-    // TODO: implement this
+  public JSON setString(String name, String value){
+    keyValue.put(name,value);
     return this;
   }
 
   @Override
   public void getObjects(Collection<String> names) {
-    // TODO: implement this
+    names = keyObject.keySet();
   }
 
   @Override
   public void getStrings(Collection<String> names) {
-    // TODO: implement this
+    names = keyValue.keySet();
   }
 }

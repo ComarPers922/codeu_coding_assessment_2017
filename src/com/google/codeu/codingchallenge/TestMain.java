@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.codeu.codingchallenge;
+package com.company;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -51,12 +51,23 @@ final class TestMain {
      }
     });
 
+    tests.add("Another String Value", new Test() {
+      @Override
+      public void run(JSONFactory factory) throws Exception {
+        final JSONParser parser = factory.parser();
+        final JSON obj = parser.parse("{  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\t\t\t\t\t\"name\":\"sam doe\" , \n\n\n\"age\":\"123\"}");
+
+        Asserts.isEqual("sam doe", obj.getString("name"));
+        Asserts.isEqual("123", obj.getString("age"));
+      }
+    });
+
     tests.add("Object Value", new Test() {
       @Override
       public void run(JSONFactory factory) throws Exception {
 
         final JSONParser parser = factory.parser();
-        final JSON obj = parser.parse("{ \"name\":{\"first\":\"sam\", \"last\":\"doe\" } }");
+        final JSON obj = parser.parse("{ \"name\":{\"first\":\"sam\", \"last\":\"doe\" }}");
 
         final JSON nameObj = obj.getObject("name");
 
@@ -65,7 +76,21 @@ final class TestMain {
         Asserts.isEqual("doe", nameObj.getString("last"));
       }
     });
+    tests.add("Another Object Value", new Test() {
+      @Override
+      public void run(JSONFactory factory) throws Exception {
 
+        final JSONParser parser = factory.parser();
+        final JSON obj = parser.parse("   { \"name\": {   \"first\"    :  \n\n\n\n\n\n\n\t   \"sam\",                \n\n\n\n\"last\":\"doe\" } ,         \"age\":\"123\"}     ");
+
+        final JSON nameObj = obj.getObject("name");
+
+        Asserts.isNotNull(nameObj);
+        Asserts.isEqual("sam", nameObj.getString("first"));
+        Asserts.isEqual("doe", nameObj.getString("last"));
+        Asserts.isEqual("123",obj.getString("age"));
+      }
+    });
     tests.run(new JSONFactory(){
       @Override
       public JSONParser parser() {

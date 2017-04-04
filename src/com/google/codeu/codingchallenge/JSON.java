@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.codeu.codingchallenge;
+package com.company;
 
-import java.io.IOException;
 import java.util.Collection;
+import java.util.Set;
 
 interface JSON {
 
