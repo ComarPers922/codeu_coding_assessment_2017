@@ -40,7 +40,66 @@ final class TestMain {
         Asserts.isEqual(objects.size(), 0);
       }
     });
-
+      tests.add("Another Empty Object", new Test() {
+          @Override
+          public void run(JSONFactory factory) throws Exception {
+              final JSONParser parser = factory.parser();
+              final JSON obj = parser.parse("{\n\n\n\n\n\n\n\n\t\t\t     }");
+              
+              final Collection<String> strings = new HashSet<>();
+              obj.getStrings(strings);
+              
+              Asserts.isEqual(strings.size(), 0);
+              
+              final Collection<String> objects = new HashSet<>();
+              obj.getObjects(objects);
+              
+              Asserts.isEqual(objects.size(), 0);
+          }
+      });
+      tests.add("Object containing Empty Object", new Test() {
+          @Override
+          public void run(JSONFactory factory) throws Exception {
+              final JSONParser parser = factory.parser();
+              final JSON preObj = parser.parse("{\"name\":{\n\n\n\n\n\n\n\n\t\t\t }\n\n    }");
+              JSON obj = preObj.getObject("name");
+              final Collection<String> strings = new HashSet<>();
+              obj.getStrings(strings);
+              
+              Asserts.isEqual(strings.size(), 0);
+              
+              final Collection<String> objects = new HashSet<>();
+              obj.getObjects(objects);
+              
+              Asserts.isEqual(objects.size(), 0);
+          }
+      });
+      tests.add("String Value And Empty Object", new Test() {
+          @Override
+          public void run(JSONFactory factory) throws Exception {
+              final JSONParser parser = factory.parser();
+              final JSON obj = parser.parse("{ \"name\":\"sam doe\" \n\n\n\t\t\t  ,   \"age\":{}}");
+              
+              Asserts.isEqual("sam doe", obj.getString("name"));
+              
+              final Collection<String> objects = new HashSet<>();
+              obj.getObject("age").getObjects(objects);
+              Asserts.isEqual(objects.size(),0);
+          }
+      });
+      tests.add("Empty Object And String Value(Order is different)", new Test() {
+          @Override
+          public void run(JSONFactory factory) throws Exception {
+              final JSONParser parser = factory.parser();
+              final JSON obj = parser.parse("{ \t\t\t\n\n\n  \"age\"\t\t\t\t    :  \n\n\n{\n\n\n\n\n\n\t\t\t} ,  \n\n\n\n\n\n\n  \"name\"  \n\n\t\t    :   \n\n\n\n\t\t\t\"sam doe\" \n\n\n\t\t\t}");
+              
+              Asserts.isEqual("sam doe", obj.getString("name"));
+              
+              final Collection<String> objects = new HashSet<>();
+              obj.getObject("age").getObjects(objects);
+              Asserts.isEqual(objects.size(),0);
+          }
+      });
     tests.add("String Value", new Test() {
       @Override
       public void run(JSONFactory factory) throws Exception {
@@ -70,12 +129,28 @@ final class TestMain {
         final JSON obj = parser.parse("{ \"name\":{\"first\":\"sam\", \"last\":\"doe\" }}");
 
         final JSON nameObj = obj.getObject("name");
-
+          
         Asserts.isNotNull(nameObj);
         Asserts.isEqual("sam", nameObj.getString("first"));
         Asserts.isEqual("doe", nameObj.getString("last"));
       }
     });
+      tests.add("Object Value Containing object Containing object", new Test() {
+          @Override
+          public void run(JSONFactory factory) throws Exception {
+              
+              final JSONParser parser = factory.parser();
+              final JSON obj = parser.parse("{ \"name\":{\"first\":\"sam\" ,\"last\":{\"lastFirstPart\"     \t\t\t\t\t\t\t  \n\n:   \n\n\n\n\n\n\n\"doe\"   ,   \t\t\t\t\t\n\n\"lastSecondPart\":\"eod\"\n\n\n\n\n\n\n\t}}}");
+              final JSON nameObj = obj.getObject("name");
+              
+              Asserts.isNotNull(nameObj);
+              Asserts.isEqual("sam", nameObj.getString("first"));
+              
+              final JSON lastNameObj = nameObj.getObject("last");
+              Asserts.isEqual("doe",lastNameObj.getString("lastFirstPart"));
+              Asserts.isEqual("eod",lastNameObj.getString("lastSecondPart"));
+          }
+      });
     tests.add("Another Object Value", new Test() {
       @Override
       public void run(JSONFactory factory) throws Exception {

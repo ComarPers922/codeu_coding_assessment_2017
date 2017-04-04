@@ -74,11 +74,17 @@ final class MyJSON implements JSON {
 
   @Override
   public void getObjects(Collection<String> names) {
-    names = keyObject.keySet();
+      for(String item:keyObject.keySet())
+      {
+          names.add(item);
+      }
   }
 
   @Override
   public void getStrings(Collection<String> names) {
-    names = keyValue.keySet();
+      for(String item:keyValue.keySet())
+      {
+          names.add(item);
+      }
   }
 }

@@ -61,7 +61,7 @@ final class MyJSONParser implements JSONParser {
     innerString = innerString.trim();
     innerString = innerString.replaceAll("\n","");
     innerString = innerString.replaceAll("\t","");//Remove other non-printable characters
-    // Spaces cannot be removed right now, they might be in the person name property
+    // Spaces cannot be removed right now, they might be in the quotation mark for key and value
     if(innerString.isEmpty())//Empty JSON
     {
       return new MyJSON();
@@ -69,7 +69,7 @@ final class MyJSONParser implements JSONParser {
 
     int currentPos = 0;//Current Position
     boolean firstChar = false;//First character should start with "\""
-    while(currentPos<innerString.length())//For all pairs in the array
+    while(currentPos < innerString.length())//For all pairs in the array
     {
       char currentChar = innerString.charAt(currentPos);//check if it is qualified
       if(currentChar==' ')
@@ -132,7 +132,7 @@ final class MyJSONParser implements JSONParser {
             }
             if(innerString.charAt(currentPos)=='{')//object
             {
-              int posRightBracket = innerString.indexOf("}",currentPos);
+                int posRightBracket = innerString.lastIndexOf("}");//,currentPos);
               if(posRightBracket!=-1)
               {
                 value = innerString.substring(currentPos,posRightBracket+1);
