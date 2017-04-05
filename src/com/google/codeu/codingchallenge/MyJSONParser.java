@@ -24,6 +24,7 @@ final class MyJSONParser implements JSONParser {
   @Override
   public JSON parse(String in) throws IOException
   {
+    String originalString = in;//To save the original text
     Map<String,String> keyValue = new HashMap<>();//Map for key-value pair
     Map<String,String> keyObject = new HashMap<>();//Map for key-object pair
     final String invalidMessage = "Invalid JSON Text";
@@ -132,7 +133,7 @@ final class MyJSONParser implements JSONParser {
             }
             if(innerString.charAt(currentPos)=='{')//object
             {
-                int posRightBracket = innerString.lastIndexOf("}");//,currentPos);
+              int posRightBracket = innerString.lastIndexOf("}");//,currentPos);
               if(posRightBracket!=-1)
               {
                 value = innerString.substring(currentPos,posRightBracket+1);
@@ -181,6 +182,6 @@ final class MyJSONParser implements JSONParser {
         throw new IOException(invalidMessage);
       }
     }
-    return new MyJSON(keyValue,keyObject,in);
+    return new MyJSON(keyValue,keyObject,originalString);
   }
 }
