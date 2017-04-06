@@ -133,18 +133,28 @@ final class MyJSONParser implements JSONParser {
             }
             if(innerString.charAt(currentPos)=='{')//object
             {
-              int posRightBracket = innerString.lastIndexOf("}");//,currentPos);
-              if(posRightBracket!=-1)
+              int posRightBracket = currentPos +1;
+              int numOfLeftBrackets = 1;//Match the bracket we found with right one
+              while(numOfLeftBrackets>0)
               {
-                value = innerString.substring(currentPos,posRightBracket+1);
-                currentPos = posRightBracket + 1;
-                keyObject.put(key,value);//set value to key-object pair
-                continue;
+                  if(innerString.charAt(posRightBracket) == '{')
+                  {
+                      numOfLeftBrackets++;
+                  }
+                  else if(innerString.charAt(posRightBracket)=='}')
+                  {
+                      numOfLeftBrackets --;
+                  }
+                  else if(posRightBracket>=innerString.length())
+                  {
+                      throw new IOException(invalidMessage);
+                  }
+                  posRightBracket ++;
               }
-              else
-              {
-                throw new IOException(invalidMessage);
-              }
+              value = innerString.substring(currentPos,posRightBracket);
+              currentPos = posRightBracket + 1;
+              keyObject.put(key,value);//set value to key-object pair
+              continue;
             }
             else if(innerString.charAt(currentPos)=='\"')//value
             {

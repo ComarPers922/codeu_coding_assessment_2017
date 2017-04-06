@@ -100,6 +100,18 @@ final class TestMain {
               Asserts.isEqual(objects.size(),0);
           }
       });
+      tests.add("Two Objects", new Test() {
+          @Override
+          public void run(JSONFactory factory) throws Exception {
+              final JSONParser parser = factory.parser();
+              final JSON obj = parser.parse("{ \"part1\":   \n\n\n\n\n\n  {\"name\":\"a\"} ,    \"part2\":{\"name\":{\"age\":\"12\"}}}   ");
+              final JSON objPart1 = obj.getObject("part1");
+              final JSON objPart2 = obj.getObject("part2");
+              
+              Asserts.isEqual("a",objPart1.getString("name"));
+              Asserts.isEqual("12",objPart2.getObject("name").getString("age"));
+          }
+      });
     tests.add("String Value", new Test() {
       @Override
       public void run(JSONFactory factory) throws Exception {
